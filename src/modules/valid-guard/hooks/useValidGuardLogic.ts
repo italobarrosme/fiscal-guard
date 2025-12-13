@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { validateCPF } from "../../../utils/cpf";
+import { validateCPF } from "../extractUserDataFromText";
 import type { ValidGuardFormData, ValidGuardValidationResult } from "../types";
 
 /**

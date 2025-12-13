@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import { InputArea } from './components/InputArea';
 import { ResultsTable } from './components/ResultsTable';
 import { StatsSummary } from './components/StatsSummary';
 import { useCpfLogic } from './hooks/useCpfLogic';
-import { CPFData } from './types';
+import type { CPFData } from './types';
 
 interface CpfDashboardProps {
   data: CPFData[];

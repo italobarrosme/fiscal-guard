@@ -1,4 +1,4 @@
-export interface CPFData {
+export type CPFData = {
   id: string;
   original: string;
   formatted: string;
@@ -8,9 +8,13 @@ export interface CPFData {
   message?: string;
 }
 
-export interface ExtractionResult {
-  cpfs: string[];
+export type UserInputData = {
+  name: string;
+  cpf: string;
+  dataNascimento: string;
+  isValid?: boolean;
 }
+
 
 export enum ValidationFilter {
   ALL = 'ALL',

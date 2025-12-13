@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CpfDashboard } from './CpfDashboard';
-import { CPFData } from './types';
-import { validateCPF, getCPFRegion } from '../../utils/cpf';
+import type { CPFData } from './types';
+import { validateCPF, getCPFRegion } from './extractUserDataFromText';
 import { checkReceitaStatus } from '../../services/receita';
 
 /**

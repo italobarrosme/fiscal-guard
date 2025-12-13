@@ -1,5 +1,5 @@
-import React from 'react';
-import { CpfSummary } from '../types';
+import type React from 'react';
+import type { CpfSummary } from '../types';
 import { Users, CheckCircle, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export const StatsSummary: React.FC<{ summary: CpfSummary }> = ({ summary }) => {
@@ -27,7 +27,7 @@ export const StatsSummary: React.FC<{ summary: CpfSummary }> = ({ summary }) => 
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex items-center gap-2 text-blue-600 mb-2">
+        <div className="flex items-center gap-2 text-indigo-600 mb-2">
           <CheckCircle className="w-4 h-4" />
           <span className="text-xs font-semibold uppercase">Situação Regular</span>
         </div>

@@ -29,7 +29,9 @@ export type CPFStatus =
 
 export type CPFData = {
 	id: string;
-	original: string;
+	name: string;
+	cpf: string;
+	dataNascimento: string;
 	isValid: boolean;
 	region: string | null;
 	receitaStatus: CPFStatus;
@@ -45,6 +47,7 @@ export type CpfSummary = {
 };
 
 export type FormattedCPF = CPFData & {
+	name: string;
 	formatted: string;
 	statusColor: string;
 	statusLabel: string;

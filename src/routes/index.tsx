@@ -1,26 +1,21 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
 	component: App,
 });
 
 function App() {
-	const navigate = useNavigate();
-
-	const handlerRouter = () => {
-		navigate({ to: "/valid-guard" });
-	};
-
 	return (
 		<div className="text-center min-h-screen flex items-center justify-center">
-			<h1 className="text-4xl font-bold">Sistema de Validação de CPFs</h1>
-			<button
-				className="bg-blue-500 text-white px-4 py-2 rounded-md"
-				type="button"
-				onClick={handlerRouter}
+			<img src="./public/logo512.png" alt="Fiscal Guard" className="w-12 h-12" />
+			<Link
+				to="/valid-guard"
+				className="hover:text-indigo-500 transition-colors duration-300 hover:underline flex flex-row items-center gap-4 justify-center"
 			>
-				Validar CPFs
-			</button>
+				<h1 className="text-4xl font-bold">Fiscal Guard</h1>
+				<ArrowRight className="size-12 animate-bounce" />
+			</Link>
 		</div>
 	);
 }

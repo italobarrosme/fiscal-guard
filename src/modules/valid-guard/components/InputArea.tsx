@@ -1,13 +1,6 @@
 import { useState, useId } from "react";
 import { Upload, FileText, Search, Loader2 } from "lucide-react";
-
-// Função mock para extrair CPFs do texto (extrai números de 11 dígitos)
-const extractCPFsFromText = async (text: string): Promise<string[]> => {
-	const cpfRegex = /\b\d{11}\b/g;
-	const matches = text.match(cpfRegex);
-	return matches || [];
-};
-
+import { extractCPFsFromText } from "@/modules/valid-guard/extractUserDataFromText";
 interface InputAreaProps {
   onProcess: (cpfs: string[]) => void;
   isProcessing: boolean;

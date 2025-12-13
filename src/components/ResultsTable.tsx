@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { CheckCircle2, XCircle, MapPin, AlertCircle, Download } from 'lucide-react';
-import { CPFData, ValidationFilter } from '../types';
+import type { CPFData } from '../modules/valid-guard/types';
+import { ValidationFilter } from '../modules/valid-guard/types';
+import { formatCPF } from '../modules/valid-guard/extractUserDataFromText';
 
 interface ResultsTableProps {
   data: CPFData[];
@@ -8,7 +10,7 @@ interface ResultsTableProps {
   setFilter: (filter: ValidationFilter) => void;
 }
 
-export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFilter }) => {
+export const ResultsTable = ({ data, filter, setFilter }: ResultsTableProps) => {
   const filteredData = useMemo(() => {
     switch (filter) {
       case ValidationFilter.VALID:
@@ -32,7 +34,10 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
   const handleExport = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
       + "Original,Formatado,Valido,Regiao\n"
-      + filteredData.map(row => `${row.original},${row.formatted},${row.isValid ? 'SIM' : 'NAO'},"${row.region}"`).join("\n");
+      + filteredData.map(row => {
+        const formatted = row.isValid ? formatCPF(row.cpf) : row.cpf;
+        return `${row.cpf},${formatted},${row.isValid ? 'SIM' : 'NAO'},"${row.region || '-'}"`;
+      }).join("\n");
     
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -50,6 +55,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between">
         <div className="flex gap-2">
           <button
+            type="button"
             onClick={() => setFilter(ValidationFilter.ALL)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               filter === ValidationFilter.ALL 
@@ -60,6 +66,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
             Todos ({stats.total})
           </button>
           <button
+            type="button"
             onClick={() => setFilter(ValidationFilter.VALID)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               filter === ValidationFilter.VALID 
@@ -70,6 +77,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
             Válidos ({stats.valid})
           </button>
           <button
+            type="button"
             onClick={() => setFilter(ValidationFilter.INVALID)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               filter === ValidationFilter.INVALID 
@@ -82,6 +90,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
         </div>
 
         <button 
+          type="button"
           onClick={handleExport}
           className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 text-sm font-medium transition-colors"
         >
@@ -94,17 +103,27 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
         <table className="w-full text-left text-sm text-slate-600">
           <thead className="bg-slate-50 text-xs uppercase text-slate-400 font-medium">
             <tr>
+              <th className="px-6 py-3">Nome</th>
               <th className="px-6 py-3">CPF</th>
               <th className="px-6 py-3">Algoritmo</th>
+              <th className="px-6 py-3">Data de Nascimento</th>
               <th className="px-6 py-3">Origem Fiscal</th>
               <th className="px-6 py-3">Status Receita*</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {filteredData.map((item) => (
+            {filteredData.map((item) => {
+              const formatted = item.isValid ? formatCPF(item.cpf) : item.cpf;
+              return (
               <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
                 <td className="px-6 py-3 font-mono font-medium text-slate-700">
-                  {item.formatted}
+                  {item.name}
+                </td>
+                <td className="px-6 py-3 font-mono font-medium text-slate-700">
+                  {formatted}
+                </td>
+                <td className="px-6 py-3">
+                  {item.dataNascimento}
                 </td>
                 <td className="px-6 py-3">
                   {item.isValid ? (
@@ -141,7 +160,8 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ data, filter, setFil
                   )}
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>
