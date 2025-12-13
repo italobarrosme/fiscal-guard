@@ -3,6 +3,7 @@ import { CpfDashboard } from './CpfDashboard';
 import type { CPFData } from './types';
 import { validateCPF, getCPFRegion } from './extractUserDataFromText';
 import { checkReceitaStatus } from '../../services/receita';
+import type { UserInputData } from '@/types';
 
 /**
  * Container Component (Render Component)
@@ -14,17 +15,19 @@ export default function CpfValidatorRender() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Função que orquestra a validação lógica e a chamada ao serviço da Receita
-  const handleProcess = async (rawList: string[]) => {
+  const handleProcess = async (rawList: UserInputData[]) => {
     setIsProcessing(true);
     
     // 1. Processamento Local (Imediato)
-    const initialProcessed: CPFData[] = rawList.map((raw, index) => {
-      const isValid = validateCPF(raw);
+    const initialProcessed: CPFData[] = rawList.map(({ name, cpf, dataNascimento }, index) => {
+      const isValid = validateCPF(cpf);
       return {
         id: `${Date.now()}-${index}`,
-        original: raw,
+        name: name,
+        cpf: cpf,
+        dataNascimento: dataNascimento,
         isValid,
-        region: isValid ? getCPFRegion(raw) : null,
+        region: isValid ? getCPFRegion(cpf) : null,
         receitaStatus: 'PENDING',
         checkedAt: new Date()
       };
@@ -35,12 +38,12 @@ export default function CpfValidatorRender() {
 
     // 2. Verificação Assíncrona (Simulando API RFB)
     // Disparamos as verificações sem bloquear a UI
-    const verifyPromises = initialProcessed.map(async (item) => {
-      const status = await checkReceitaStatus(item.original, item.isValid);
+    const verifyPromises = initialProcessed.map(async ({ cpf, isValid }) => {
+      const status = await checkReceitaStatus(cpf, isValid);
       
       // Atualiza o item específico no estado assim que a promessa resolve
       setData(currentData => 
-        currentData.map(d => d.id === item.id ? { ...d, receitaStatus: status } : d)
+        currentData.map(d => d.id === cpf ? { ...d, receitaStatus: status } : d)
       );
     });
 

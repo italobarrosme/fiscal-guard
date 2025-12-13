@@ -91,7 +91,7 @@ export const extractUserDataFromText = (text: string): ExtractedUserData[] => {
       const normalizedName = name.replace(/\s+/g, ' ').trim();
       const cleanCPF = cpf.trim();
       
-      // Valida o CPF, mas inclui mesmo os inválidos no resultado
+      // Valida o CPF, mas inclui mesmo os inválidos no resultado (não formata se inválido)
       const isValid = validateCPF(cleanCPF);
       
       results.push({
@@ -100,6 +100,49 @@ export const extractUserDataFromText = (text: string): ExtractedUserData[] => {
         dataNascimento: dataNascimento.trim(),
         isValid,
       });
+    } else {
+      // Se não corresponder ao padrão completo, tenta extrair CPF com quantidade variável de dígitos
+      // Inclui mesmo CPFs inválidos ou fora do padrão (com quantidade errada de dígitos), apenas sem formatação
+      // Procura por sequências de 8 a 15 dígitos (CPF pode ter de 8 a 11 dígitos, mas aceitamos mais para não perder dados)
+      const flexiblePattern = /^(.+?)\s+(\d{8,15})\s+(\d{2}\/\d{2}\/\d{4})$/;
+      const flexibleMatch = line.match(flexiblePattern);
+      
+      if (flexibleMatch) {
+        const [, name, cpf, dataNascimento] = flexibleMatch;
+        const normalizedName = name.replace(/\s+/g, ' ').trim();
+        const cleanCPF = cpf.trim();
+        
+        // Valida o CPF (será false se não tiver 11 dígitos ou for inválido)
+        const isValid = validateCPF(cleanCPF);
+        
+        results.push({
+          name: normalizedName,
+          cpf: cleanCPF,
+          dataNascimento: dataNascimento.trim(),
+          isValid,
+        });
+      } else {
+        // Última tentativa: procura qualquer sequência de dígitos que possa ser um CPF
+        // Procura por padrão: texto + dígitos + possível data
+        const lastResortPattern = /^(.+?)\s+(\d{8,15})(?:\s+(\d{2}\/\d{2}\/\d{4}))?$/;
+        const lastResortMatch = line.match(lastResortPattern);
+        
+        if (lastResortMatch) {
+          const [, name, cpf, dataNascimento] = lastResortMatch;
+          const normalizedName = name.replace(/\s+/g, ' ').trim();
+          const cleanCPF = cpf.trim();
+          
+          // Valida o CPF (será false se não tiver 11 dígitos ou for inválido)
+          const isValid = validateCPF(cleanCPF);
+          
+          results.push({
+            name: normalizedName,
+            cpf: cleanCPF,
+            dataNascimento: dataNascimento ? dataNascimento.trim() : '',
+            isValid,
+          });
+        }
+      }
     }
   }
 

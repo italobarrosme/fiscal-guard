@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { InputArea } from "../../components/InputArea";
-import { ResultsTable } from "../../components/ResultsTable";
+import { InputArea } from "./components/InputArea";
+import { ResultsTable } from "./components/ResultsTable";
 import type { CPFData } from "./types";
 import { ValidationFilter } from "./types";
 import { validateCPFs } from "../../services/valid-guard";
@@ -22,10 +22,8 @@ export function ValidGuardRender() {
 		setIsProcessing(true);
 		try {
 			// Usa o isValid já calculado na extração, evitando validar duas vezes
-			const results = await validateCPFs(
-				data,
-				data.map(item => item.isValid ?? true) // Usa isValid da extração ou assume true se não existir
-			);
+			const results = await validateCPFs(data);
+			console.log("results", results);
 			setCpfData(results);
 		} catch (error) {
 			console.error("Erro ao validar CPFs:", error);
@@ -38,9 +36,7 @@ export function ValidGuardRender() {
 	return (
 		<section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<header className="mb-8">
-				<h1 className="text-3xl font-bold text-slate-800 mb-2">
-					Valid Guard
-				</h1>
+				<h1 className="text-3xl font-bold text-slate-800 mb-2">Valid Guard</h1>
 				<p className="text-slate-600">
 					Valide uma lista de CPFs de forma rápida e segura
 				</p>
@@ -54,4 +50,3 @@ export function ValidGuardRender() {
 		</section>
 	);
 }
-

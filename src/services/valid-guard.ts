@@ -12,6 +12,8 @@ export async function validateCPFs(
 	cpfs: { name: string; cpf: string; dataNascimento: string }[],
 	isValidArray?: boolean[]
 ): Promise<CPFData[]> {
+
+	console.log("cpfs", cpfs);
 	try {
 		// TODO: Substituir pela URL real da API quando disponível
 		// Por enquanto, valida localmente usando algoritmo de validação
@@ -20,8 +22,8 @@ export async function validateCPFs(
 			const isValid = isValidArray?.[index] ?? validateCPF(cpf);
 			const region = isValid ? getCPFRegion(cpf) : null;
 			
-			// Por padrão, o status da receita é PENDING pois requer certificado digital
-			const receitaStatus: CPFStatus = "PENDING";
+			// Se inválido, status negativo. Se válido, PENDING (aguardando validação da Receita)
+			const receitaStatus: CPFStatus = isValid ? "PENDING" : "ERROR";
 
 			return {
 				id: `cpf-${index}-${Date.now()}`,

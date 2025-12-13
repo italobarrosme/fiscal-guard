@@ -4,10 +4,11 @@ import { ResultsTable } from './components/ResultsTable';
 import { StatsSummary } from './components/StatsSummary';
 import { useCpfLogic } from './hooks/useCpfLogic';
 import type { CPFData } from './types';
+import type { UserInputData } from '@/types';
 
 interface CpfDashboardProps {
   data: CPFData[];
-  onProcess: (rawList: string[]) => void;
+  onProcess: (rawList: UserInputData[]) => void;
   isProcessing: boolean;
 }
 
