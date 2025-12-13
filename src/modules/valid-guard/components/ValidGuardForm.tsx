@@ -30,6 +30,11 @@ export const ValidGuardForm = ({
 	const formData = watch();
 	const { isValid, errors: validationErrors } = useValidGuardLogic(formData);
 
+	// IDs únicos para cada campo (hooks devem ser chamados no topo)
+	const nomeId = useId();
+	const cpfId = useId();
+	const dataNascimentoId = useId();
+
 	const onSubmitForm = async (data: ValidGuardFormData) => {
 		await onSubmit(data);
 	};
@@ -75,7 +80,7 @@ export const ValidGuardForm = ({
 					</label>
 					<div className="relative">
 						<input
-							id={useId()}
+							id={nomeId}
 							type="text"
 							{...register("nome", {
 								required: "Nome é obrigatório",
@@ -119,7 +124,7 @@ export const ValidGuardForm = ({
 					</label>
 					<div className="relative">
 						<input
-							id={useId()}
+							id={cpfId}
 							type="text"
 							{...register("cpf", {
 								required: "CPF é obrigatório",
@@ -161,7 +166,7 @@ export const ValidGuardForm = ({
 					</label>
 					<div className="relative">
 						<input
-							id={useId()}
+							id={dataNascimentoId}
 							type="text"
 							{...register("dataNascimento", {
 								required: "Data de nascimento é obrigatória",
