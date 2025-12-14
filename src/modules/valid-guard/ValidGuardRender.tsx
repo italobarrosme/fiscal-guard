@@ -23,7 +23,6 @@ export function ValidGuardRender() {
 		try {
 			// Usa o isValid já calculado na extração, evitando validar duas vezes
 			const results = await validateCPFs(data);
-			console.log("results", results);
 			setCpfData(results);
 		} catch (error) {
 			console.error("Erro ao validar CPFs:", error);

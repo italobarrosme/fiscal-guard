@@ -13,7 +13,6 @@ export async function validateCPFs(
 	isValidArray?: boolean[]
 ): Promise<CPFData[]> {
 
-	console.log("cpfs", cpfs);
 	try {
 		// TODO: Substituir pela URL real da API quando disponível
 		// Por enquanto, valida localmente usando algoritmo de validação
